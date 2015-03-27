@@ -3,12 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.linepack.enviosms.controller;
+package org.linepack.enviosmstelnet.controller;
 
 import javax.persistence.EntityManager;
-import org.linepack.enviosms.model.EntityManagerDAO;
-import org.linepack.enviosms.model.Sms;
-import org.linepack.enviosms.model.SmsTelnet;
+import org.linepack.enviosmstelnet.model.EntityManagerDAO;
+import org.linepack.enviosmstelnet.model.Sms;
+import org.linepack.enviosmstelnet.model.SmsTelnet;
 
 /**
  *

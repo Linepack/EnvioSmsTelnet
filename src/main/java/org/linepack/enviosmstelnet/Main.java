@@ -3,13 +3,13 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.linepack.enviosms;
+package org.linepack.enviosmstelnet;
 
 import java.sql.Time;
-import org.linepack.enviosms.controller.SmsController;
-import org.linepack.enviosms.controller.SmsTelnetController;
-import org.linepack.enviosms.model.Sms;
-import org.linepack.enviosms.model.SmsTelnet;
+import org.linepack.enviosmstelnet.controller.SmsController;
+import org.linepack.enviosmstelnet.controller.SmsTelnetController;
+import org.linepack.enviosmstelnet.model.Sms;
+import org.linepack.enviosmstelnet.model.SmsTelnet;
 
 /**
  *

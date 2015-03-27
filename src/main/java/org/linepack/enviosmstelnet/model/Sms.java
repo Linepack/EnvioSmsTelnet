@@ -3,41 +3,39 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.linepack.enviosms.model;
+package org.linepack.enviosmstelnet.model;
 
 import java.io.Serializable;
-import java.sql.Time;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.Table;
 
 /**
  *
  * @author Giovana
  */
-@Entity(name = "sms_outbox")
-@Table(name = "sms_outbox")
-public class SmsTelnet implements Serializable {
+@Entity(name = "GESMS")
+public class Sms implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "SQ_SMS")
     private Integer id;
 
+    @Column(name = "NR_TELEFONE")
     private String telefone;
 
+    @Column(name = "DS_MENSAGEM")
     private String mensagem;
 
-    @Column(name = "hora_ini")
-    private Time horaInicial;
+    @Column(name = "STATUS")
+    private Integer status;
 
-    @Column(name = "hora_fim")
-    private Time horaFinal;
-
-    private String status;
-
-    @Column(name = "ultima_falha")
+    @Column(name = "DS_ERRO")
     private String erro;
 
     public Integer getId() {
@@ -64,27 +62,11 @@ public class SmsTelnet implements Serializable {
         this.mensagem = mensagem;
     }
 
-    public Time getHoraInicial() {
-        return horaInicial;
-    }
-
-    public void setHoraInicial(Time horaInicial) {
-        this.horaInicial = horaInicial;
-    }
-
-    public Time getHoraFinal() {
-        return horaFinal;
-    }
-
-    public void setHoraFinal(Time horaFinal) {
-        this.horaFinal = horaFinal;
-    }
-
-    public String getStatus() {
+    public Integer getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(Integer status) {
         this.status = status;
     }
 
@@ -106,10 +88,10 @@ public class SmsTelnet implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof SmsTelnet)) {
+        if (!(object instanceof Sms)) {
             return false;
         }
-        SmsTelnet other = (SmsTelnet) object;
+        Sms other = (Sms) object;
         if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
@@ -118,7 +100,7 @@ public class SmsTelnet implements Serializable {
 
     @Override
     public String toString() {
-        return "org.linepack.enviosms.model.SmsTelnet[ id=" + id + " ]";
+        return "org.linepack.enviosms.model.Sms[ id=" + id + " ]";
     }
 
 }
