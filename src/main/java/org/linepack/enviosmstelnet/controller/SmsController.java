@@ -5,7 +5,10 @@
  */
 package org.linepack.enviosmstelnet.controller;
 
+import java.util.List;
 import javax.persistence.EntityManager;
+import javax.persistence.Query;
+import javax.persistence.TypedQuery;
 import org.linepack.enviosmstelnet.model.EntityManagerDAO;
 import org.linepack.enviosmstelnet.model.Sms;
 import org.linepack.enviosmstelnet.model.SmsTelnet;
@@ -23,26 +26,38 @@ public class SmsController {
         manager.close();
 
         return sms;
-
     }
 
-    public static void update(SmsTelnet smsMysql, Sms smsOracle) {
-
-        EntityManager manager = EntityManagerDAO.getEntityManager("Oracle");
+    private static void update(SmsTelnet smsMysql, Sms smsOracle, EntityManager manager) {       
         
-        if (smsMysql.getStatus() == "ENVIADO") {
+        if (smsMysql.getStatus().equals("ENVIADO")) {
             smsOracle.setStatus(1);
         }
         
-        if(smsMysql.getErro() == null){
+        if(smsMysql.getErro() != null){
             smsOracle.setErro(smsMysql.getErro());
         }
         
-        manager.merge(smsOracle);
-        manager.getTransaction().commit();
+        manager.merge(smsOracle);       
+    }
+    
+    
+    public static void updateNotSend(){
         
+        EntityManager manager = EntityManagerDAO.getEntityManager("Oracle");        
+        Query query = manager.createQuery("select s from GESMS s where s.status = 0");                 
+        
+        for (Object smsObject : query.getResultList()){
+            
+            Sms smsOracle = new Sms();
+            smsOracle = (Sms) smsObject;            
+            SmsTelnet smsMysql = SmsTelnetController.query(smsOracle.getId());
+            SmsController.update(smsMysql, smsOracle, manager);
+        } 
+        
+        manager.getTransaction().commit();                
         manager.close();
-
+        
     }
 
 }
