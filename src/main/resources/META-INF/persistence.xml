@@ -4,20 +4,20 @@
     <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
     <class>org.linepack.enviosmstelnet.model.Sms</class>
     <properties>
-      <property name="javax.persistence.jdbc.url" value="jdbc:oracle:thin:@192.168.1.200:1521:unicoop"/>
-      <property name="javax.persistence.jdbc.user" value="unicampo"/>
+      <property name="javax.persistence.jdbc.url" value="jdbc:oracle:thin:@ip:porta:instancia"/>
+      <property name="javax.persistence.jdbc.user" value="usuario"/>
       <property name="javax.persistence.jdbc.driver" value="oracle.jdbc.OracleDriver"/>
-      <property name="javax.persistence.jdbc.password" value="saladao"/>
+      <property name="javax.persistence.jdbc.password" value="senha"/>
     </properties>
   </persistence-unit>
   <persistence-unit name="Mysql" transaction-type="RESOURCE_LOCAL">
     <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
     <class>org.linepack.enviosmstelnet.model.SmsTelnet</class>
     <properties>
-      <property name="javax.persistence.jdbc.url" value="jdbc:mysql://192.168.1.95:3306/asterisk"/>
-      <property name="javax.persistence.jdbc.user" value="unicampo"/>
+      <property name="javax.persistence.jdbc.url" value="jdbc:mysql://ip:porta/instancia"/>
+      <property name="javax.persistence.jdbc.user" value="usuario"/>
       <property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver"/>
-      <property name="javax.persistence.jdbc.password" value="uni1010"/>
+      <property name="javax.persistence.jdbc.password" value="senha"/>
     </properties>
   </persistence-unit>
 </persistence>
