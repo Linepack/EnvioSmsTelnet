@@ -59,26 +59,27 @@ public class Main {
 
     public static void enviaSms(Sms smsOracle) {
 
-        SmsTelnet smsTelnet = new SmsTelnet();
+        SmsTelnet smsMysql = new SmsTelnet();
 
         try {
-            smsTelnet = SmsTelnetController.query(smsOracle.getId());
+            smsMysql = SmsTelnetController.query(smsOracle.getId());
         } catch (NullPointerException ex) {
         }
 
-        if (smsTelnet != null) {
-            SmsController.updateNotSend(smsTelnet);
+        if (smsMysql != null) {
+            SmsController.updateNotSend(smsMysql);
             return;
         }
-
-        SmsTelnet smsMysql = new SmsTelnet();
+       
+        smsMysql = new SmsTelnet();
         smsMysql.setTelefone(smsOracle.getTelefone());
         smsMysql.setMensagem(removerAcentos(smsOracle.getMensagem()));
         smsMysql.setStatus("EM FILA");
         smsMysql.setId(smsOracle.getId());
         smsMysql.setHoraInicial(stringToTime(smsOracle.getHoraInicio()));
         smsMysql.setHoraFinal(stringToTime(smsOracle.getHoraFim()));
-        SmsTelnetController.insert(smsMysql);
+        smsMysql.setNumeroDeFalhas(0);
+        SmsTelnetController.insert(smsMysql);        
         log.info("SMS " + smsOracle.getId() + " cadastrado no sistema TELNET.");
     }
 
