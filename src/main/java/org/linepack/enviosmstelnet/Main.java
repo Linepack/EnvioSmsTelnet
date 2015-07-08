@@ -5,13 +5,20 @@
  */
 package org.linepack.enviosmstelnet;
 
+import java.io.IOException;
 import java.sql.Time;
+import java.text.Normalizer;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
+import javax.persistence.EntityManager;
 import org.apache.log4j.Logger;
 import org.linepack.enviosmstelnet.controller.SmsController;
 import org.linepack.enviosmstelnet.controller.SmsTelnetController;
+import org.linepack.enviosmstelnet.model.EntityManagerDAO;
 import org.linepack.enviosmstelnet.model.Sms;
 import org.linepack.enviosmstelnet.model.SmsTelnet;
-import org.linepack.enviosmstelnet.util.DataAtual;
 
 /**
  *
@@ -20,46 +27,69 @@ import org.linepack.enviosmstelnet.util.DataAtual;
 public class Main {
 
     private static Logger log = Logger.getLogger(Main.class);
+    public static EntityManager emOracle;
+    public static EntityManager emMysql;
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
 
-        Integer sequenciaSmsOracle = null;
+        Timer timer = null;
+        if (timer == null) {
+            timer = new Timer();
+            TimerTask tarefa;
+            tarefa = new TimerTask() {
+
+                @Override
+                public void run() {
+
+                    List<Sms> smsList = new ArrayList<>();
+
+                    emOracle = EntityManagerDAO.getEntityManager("Oracle");
+                    emMysql = EntityManagerDAO.getEntityManager("Mysql");
+
+                    smsList.addAll(SmsController.getSmsNotSend());
+
+                    for (Sms sms : smsList) {
+                        enviaSms(sms);
+                    }
+                }
+            };
+            timer.scheduleAtFixedRate(tarefa, 5000, 5000);
+        }
+    }
+
+    public static void enviaSms(Sms smsOracle) {
+
+        SmsTelnet smsTelnet = new SmsTelnet();
 
         try {
-            sequenciaSmsOracle = Integer.parseInt(args[0]);
-            
-            Integer idMysql = null;
-            try{
-                idMysql = SmsTelnetController.query(sequenciaSmsOracle).getId();
-            }catch(NullPointerException ex){
-                idMysql = 0;    
-            }
-            
-            if (idMysql > 0){
-               SmsController.updateNotSend();
-               return;
-            }                                    
-            
-            Sms smsOracle = SmsController.query(sequenciaSmsOracle);
-            SmsTelnet smsMysql = new SmsTelnet();
-            smsMysql.setTelefone(smsOracle.getTelefone());
-            smsMysql.setMensagem(smsOracle.getMensagem());
-            smsMysql.setStatus("EM FILA");
-            smsMysql.setId(sequenciaSmsOracle);
-            Time dataInicial = new Time(0, 0, 0);
-            smsMysql.setHoraInicial(dataInicial);
-            Time dataFinal = new Time(23, 59, 0);
-            smsMysql.setHoraFinal(dataFinal);
-
-            SmsTelnetController.insert(smsMysql);
-                        
-        } catch (IndexOutOfBoundsException ex) {
-            log.error(DataAtual.get() + "Help: [java -jar [ProjectHome]/EnvioSmsTelnet.jar [SequenciaDoSms[Integer]]]");            
-        } catch (Exception ex) {
-            log.error(DataAtual.get() + ex.getMessage());
-            ex.printStackTrace();
+            smsTelnet = SmsTelnetController.query(smsOracle.getId());
+        } catch (NullPointerException ex) {
         }
 
+        if (smsTelnet != null) {
+            SmsController.updateNotSend(smsTelnet);
+            return;
+        }
+
+        SmsTelnet smsMysql = new SmsTelnet();
+        smsMysql.setTelefone(smsOracle.getTelefone());
+        smsMysql.setMensagem(removerAcentos(smsOracle.getMensagem()));
+        smsMysql.setStatus("EM FILA");
+        smsMysql.setId(smsOracle.getId());
+        smsMysql.setHoraInicial(stringToTime(smsOracle.getHoraInicio()));
+        smsMysql.setHoraFinal(stringToTime(smsOracle.getHoraFim()));
+        SmsTelnetController.insert(smsMysql);
+        log.info("SMS " + smsOracle.getId() + " cadastrado no sistema TELNET.");
+    }
+
+    private static String removerAcentos(String str) {
+        return Normalizer.normalize(str, Normalizer.Form.NFD).replaceAll("[^\\p{ASCII}]", "");
+    }
+
+    private static Time stringToTime(String horaString) {
+        String[] horaStringArray = horaString.split(":");
+        Time horaTime = new Time(Integer.parseInt(horaStringArray[0]), Integer.parseInt(horaStringArray[1]), Integer.parseInt(horaStringArray[2]));
+        return horaTime;
     }
 
 }

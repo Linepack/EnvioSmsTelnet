@@ -5,8 +5,7 @@
  */
 package org.linepack.enviosmstelnet.controller;
 
-import javax.persistence.EntityManager;
-import org.linepack.enviosmstelnet.model.EntityManagerDAO;
+import org.linepack.enviosmstelnet.Main;
 import org.linepack.enviosmstelnet.model.SmsTelnet;
 
 /**
@@ -16,19 +15,17 @@ import org.linepack.enviosmstelnet.model.SmsTelnet;
 public class SmsTelnetController {
 
     public static SmsTelnet query(Integer id) {
-
-        EntityManager manager = EntityManagerDAO.getEntityManager("Mysql");
-        SmsTelnet sms = manager.find(SmsTelnet.class, id);
-        manager.close();
-
+        SmsTelnet sms = Main.emMysql.find(SmsTelnet.class, id);
+        if (sms != null) {
+            Main.emMysql.refresh(sms);
+        }
         return sms;
     }
 
     public static Integer insert(SmsTelnet sms) {
 
-        EntityManager manager = EntityManagerDAO.getEntityManager("Mysql");
-        manager.persist(sms);
-        manager.getTransaction().commit();
+        Main.emMysql.persist(sms);
+        Main.emMysql.getTransaction().commit();
 
         return sms.getId();
 

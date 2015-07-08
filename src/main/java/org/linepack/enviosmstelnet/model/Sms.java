@@ -6,11 +6,13 @@
 package org.linepack.enviosmstelnet.model;
 
 import java.io.Serializable;
+import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Temporal;
 
 /**
  *
@@ -37,6 +39,22 @@ public class Sms implements Serializable {
 
     @Column(name = "DS_ERRO")
     private String erro;
+
+    @Column(name = "NR_TENTATIVAS")
+    private Integer numeroDeTentativas;
+
+    @Column(name = "NM_USUALT")
+    private String usuarioAlteracao;
+
+    @Column(name = "DT_USUALT")
+    @Temporal(javax.persistence.TemporalType.DATE)
+    private Date dataAlteracao;
+
+    @Column(name = "HR_INICIO")
+    private String horaInicio;
+
+    @Column(name = "HR_FIM")
+    private String horaFim;
 
     public Integer getId() {
         return id;
@@ -76,6 +94,46 @@ public class Sms implements Serializable {
 
     public void setErro(String erro) {
         this.erro = erro;
+    }
+
+    public Integer getNumeroDeTentativas() {
+        return numeroDeTentativas;
+    }
+
+    public void setNumeroDeTentativas(Integer numeroDeTentativas) {
+        this.numeroDeTentativas = numeroDeTentativas;
+    }
+
+    public String getUsuarioAlteracao() {
+        return usuarioAlteracao;
+    }
+
+    public void setUsuarioAlteracao(String usuarioAlteracao) {
+        this.usuarioAlteracao = usuarioAlteracao;
+    }
+
+    public Date getDataAlteracao() {
+        return dataAlteracao;
+    }
+
+    public void setDataAlteracao(Date dataAlteracao) {
+        this.dataAlteracao = dataAlteracao;
+    }
+
+    public String getHoraInicio() {
+        return horaInicio;
+    }
+
+    public void setHoraInicio(String horaInicio) {
+        this.horaInicio = horaInicio;
+    }
+
+    public String getHoraFim() {
+        return horaFim;
+    }
+
+    public void setHoraFim(String horaFim) {
+        this.horaFim = horaFim;
     }
 
     @Override

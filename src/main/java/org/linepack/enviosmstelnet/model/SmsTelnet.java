@@ -39,6 +39,9 @@ public class SmsTelnet implements Serializable {
 
     @Column(name = "ultima_falha")
     private String erro;
+    
+    @Column(name = "falhas")
+    private Integer numeroDeFalhas;
 
     public Integer getId() {
         return id;
@@ -95,6 +98,15 @@ public class SmsTelnet implements Serializable {
     public void setErro(String erro) {
         this.erro = erro;
     }
+
+    public Integer getNumeroDeFalhas() {
+        return numeroDeFalhas;
+    }
+
+    public void setNumeroDeFalhas(Integer numeroDeFalhas) {
+        this.numeroDeFalhas = numeroDeFalhas;
+    }
+        
 
     @Override
     public int hashCode() {
