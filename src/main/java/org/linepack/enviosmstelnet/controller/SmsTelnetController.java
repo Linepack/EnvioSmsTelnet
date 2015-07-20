@@ -25,6 +25,9 @@ public class SmsTelnetController {
     public static Integer insert(SmsTelnet sms) {
 
         Main.emMysql.persist(sms);
+        if (!Main.emMysql.getTransaction().isActive()) {
+            Main.emMysql.getTransaction().begin();
+        }
         Main.emMysql.getTransaction().commit();
 
         return sms.getId();
